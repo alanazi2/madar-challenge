@@ -1,0 +1,50 @@
+/* هوية مدار: خلفية داكنة، Cairo، برتقالي/سماوي/عاجي، وزخرفة المدار. تصميم واحد (داكن) باختيار الهوية. */
+:root{
+  --bg:#07090b; --surface:#0e1316; --surface-2:#141b1f; --teal:#285865; --teal-s:#0f2228;
+  --ivory:#f2e7dd; --muted:#b8afa6; --orange:#f17233; --cyan:#97d4dd;
+  --ok:#7fd39a; --bad:#e5647e; --line:rgba(242,231,221,.12); --line-2:rgba(242,231,221,.26); --on-accent:#14100d;
+  --plat:var(--orange); --plat-ink:var(--on-accent);
+  --font:"Cairo",system-ui,"Segoe UI",Tahoma,sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+html,body{background:var(--bg);color:var(--ivory);margin:0}
+body{font-family:var(--font);font-size:16px;line-height:1.65;min-height:100vh;
+  background:radial-gradient(900px 480px at 85% -8%,rgba(40,88,101,.42),transparent 60%),radial-gradient(640px 380px at 0% 108%,rgba(241,114,51,.09),transparent 70%),var(--bg);background-attachment:fixed}
+button,input,select{font-family:inherit;color:inherit;font-size:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--cyan);outline-offset:3px;border-radius:10px}
+[hidden]{display:none!important}
+.wrap{max-width:720px;margin:0 auto;padding:0 16px 48px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 0;border-bottom:1px solid var(--line);margin-bottom:20px}
+.top img{height:36px;width:auto;display:block}
+.badge{font-size:13px;font-weight:700;border-radius:999px;padding:4px 14px;background:var(--plat);color:var(--plat-ink);border:1px solid rgba(242,231,221,.2);white-space:nowrap}
+h1{font-size:clamp(26px,6vw,38px);line-height:1.25;margin:.2em 0 .3em;font-weight:800}
+h2{font-size:20px;margin:0 0 10px;font-weight:700}
+.lead{color:var(--muted);margin:0 0 18px}
+.eyebrow{font-size:12px;font-weight:700;letter-spacing:.28em;color:var(--cyan);text-transform:uppercase}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:18px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:999px;padding:14px 26px;font-weight:800;background:var(--orange);color:var(--on-accent);min-height:48px}
+.btn.ghost{background:transparent;color:var(--ivory);border:1.5px solid var(--line-2)}
+.btn.block{width:100%}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn:active:not(:disabled){transform:translateY(1px)}
+label.l{display:block;font-weight:700;margin:18px 0 8px}
+input.t{width:100%;background:var(--surface-2);border:1.5px solid var(--line-2);border-radius:14px;padding:13px 16px;min-height:50px}
+input.t::placeholder{color:#8a847d}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1.5px solid var(--line-2);background:transparent;border-radius:999px;padding:8px 16px;font-weight:700;color:var(--muted);min-height:40px}
+.chip[aria-pressed="true"]{background:var(--cyan);color:var(--on-accent);border-color:var(--cyan)}
+.pick{display:grid;gap:10px}
+.pick.two{grid-template-columns:1fr 1fr}
+.pick.three{grid-template-columns:repeat(3,1fr)}
+.opt-card{text-align:start;border:1.5px solid var(--line-2);background:var(--surface);border-radius:16px;padding:14px;display:block;width:100%}
+.opt-card b{display:block;font-size:17px}
+.opt-card span{display:block;color:var(--muted);font-size:13px;margin-top:2px}
+.opt-card[aria-pressed="true"]{border-color:var(--orange);background:rgba(241,114,51,.1)}
+.err{color:var(--bad);font-size:14px;margin-top:10px;min-height:1.2em}
+.muted{color:var(--muted)}
+.num{font-variant-numeric:tabular-nums}
+@media(max-width:480px){.pick.three{grid-template-columns:1fr}.pick.two{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}

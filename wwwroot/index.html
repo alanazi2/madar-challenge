@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#07090b">
+<title>مدار — منصة التحدي</title>
+<link rel="stylesheet" href="css/fonts.css">
+<link rel="stylesheet" href="css/madar.css">
+<style>
+.hero{padding:6px 0 4px}
+.orbitline{display:inline-flex;align-items:center;gap:10px;border:1px solid var(--line-2);border-radius:999px;padding:6px 16px;font-weight:700;margin-bottom:6px}
+.orbitline i{width:10px;height:10px;border-radius:50%;background:var(--orange);display:block}
+.bar{height:6px;background:var(--surface-2);border-radius:99px;overflow:hidden}
+.bar>div{height:100%;width:0;background:var(--cyan);border-radius:99px}
+.bar.time>div{background:var(--orange);transition:none}
+.qhead{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:2px 0 10px;font-weight:700}
+.pts{display:inline-block;background:rgba(241,114,51,.14);color:var(--orange);border-radius:999px;padding:3px 14px;font-weight:800}
+.qcard{margin-top:14px}
+.qtag{display:flex;gap:8px;align-items:center;color:var(--muted);font-size:13px;font-weight:700;margin-bottom:8px}
+.dots{display:inline-flex;gap:3px}.dots i{width:14px;height:5px;border-radius:3px;background:var(--line-2);display:block}.dots i.on{background:var(--cyan)}
+.qtext{font-size:clamp(19px,4.8vw,24px);font-weight:700;line-height:1.55;margin:0}
+.opts{display:grid;gap:10px;margin-top:16px}
+.opt{text-align:start;border:1.5px solid var(--line-2);background:var(--surface-2);border-radius:16px;padding:14px 16px;min-height:56px;display:flex;gap:12px;align-items:center;line-height:1.5}
+.opt .k{flex:none;width:30px;height:30px;border-radius:50%;border:1.5px solid var(--line-2);display:grid;place-items:center;font-weight:800;font-size:14px;color:var(--muted)}
+.opt:not(:disabled):hover{border-color:var(--cyan)}
+.opt.ok{border-color:var(--ok);background:rgba(127,211,154,.12)}
+.opt.ok .k{background:var(--ok);color:var(--on-accent);border-color:var(--ok)}
+.opt.no{border-color:var(--bad);background:rgba(229,100,126,.12)}
+.opt.no .k{background:var(--bad);color:var(--on-accent);border-color:var(--bad)}
+.opt:disabled{cursor:default;color:inherit}
+.fb{margin-top:14px;border-radius:16px;padding:14px 16px;border:1px solid var(--line)}
+.fb.good{background:rgba(127,211,154,.08);border-color:rgba(127,211,154,.35)}
+.fb.bad{background:rgba(229,100,126,.08);border-color:rgba(229,100,126,.35)}
+.fb b{display:block;margin-bottom:4px}
+.fb small{display:block;color:var(--muted);margin-top:8px;font-size:12px}
+.ring{width:176px;height:176px;margin:8px auto 0;position:relative}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring .c{position:absolute;inset:0;display:grid;place-content:center;text-align:center}
+.ring .c b{font-size:44px;line-height:1;font-weight:800;color:var(--orange)}
+.ring .c span{font-size:13px;color:var(--muted)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:18px 0}
+.stat{background:var(--surface-2);border:1px solid var(--line);border-radius:14px;padding:12px 8px;text-align:center}
+.stat b{display:block;font-size:22px;font-weight:800}.stat span{font-size:12px;color:var(--muted)}
+.rec{display:block;text-decoration:none;color:inherit;border:1px solid var(--line);border-radius:16px;padding:14px 16px;background:var(--surface-2);margin-top:10px}
+.rec small{display:block;font-size:12px;font-weight:800;letter-spacing:.04em;color:var(--cyan);margin-bottom:2px}
+.rec b{display:block}.rec span{color:var(--muted);font-size:14px}
+.lb{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.lb li{display:grid;grid-template-columns:36px minmax(0,1fr) auto;gap:12px;align-items:center;border:1px solid var(--line);border-radius:14px;padding:10px 14px;background:rgba(242,231,221,.03)}
+.lb li:first-child{border-color:rgba(241,114,51,.6);background:rgba(241,114,51,.08)}
+.lb .rk{font-weight:800;color:var(--muted);text-align:center}.lb li:first-child .rk{color:var(--orange)}
+.lb .nm{font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lb .nm small{display:block;font-weight:400;color:var(--muted);font-size:12px}
+.lb .sc{font-weight:800}
+.me{outline:2px solid var(--cyan)}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}.row .btn{flex:1}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top"><img src="img/madar-logo.png" alt="مدار" width="120" height="36"><span class="badge" id="badge">منصات طويق</span></header>
+
+  <!-- 1) البداية -->
+  <section id="v-start" hidden>
+    <div class="hero">
+      <div class="orbitline" id="orbitline"><i></i><span id="orbitname"></span></div>
+      <h1>مستعد للتحدي؟</h1>
+      <p class="lead" id="orbitq">اختر مجالك ومستواك، والأسئلة تُسحب لك أنت وحدك.</p>
+    </div>
+    <div class="card">
+      <label class="l" for="name" style="margin-top:0">اسم المشارك</label>
+      <input class="t" id="name" maxlength="24" autocomplete="nickname" placeholder="مثال: ريم">
+      <label class="l" id="lf">المجال</label>
+      <div class="pick two" role="group" aria-labelledby="lf" id="fields"></div>
+      <label class="l" id="ll">المستوى</label>
+      <div class="pick three" role="group" aria-labelledby="ll" id="levels"></div>
+      <label class="l" id="lo">المدار</label>
+      <div class="chips" role="group" aria-labelledby="lo" id="orbits"></div>
+      <div class="err" id="serr" role="alert"></div>
+      <button class="btn block" id="go" style="margin-top:12px">ابدأ التحدي</button>
+      <div class="row" style="margin-top:10px"><button class="btn ghost" id="seeboard">لوحة الصدارة</button></div>
+    </div>
+  </section>
+
+  <!-- 2) الأسئلة -->
+  <section id="v-quiz" hidden>
+    <div class="qhead"><span class="num" id="qn"></span><span class="pts num" id="qscore">0 نقطة</span></div>
+    <div class="bar" aria-hidden="true"><div id="pbar"></div></div>
+    <div class="bar time" style="margin-top:6px" aria-hidden="true"><div id="tbar"></div></div>
+    <div class="card qcard">
+      <div class="qtag"><span id="qorb"></span><span class="dots" id="qlv" aria-hidden="true"></span></div>
+      <p class="qtext" id="qtext"></p>
+      <div class="opts" id="opts" role="group" aria-label="الخيارات"></div>
+      <div id="fb" aria-live="polite"></div>
+      <button class="btn block" id="next" hidden style="margin-top:14px">التالي</button>
+    </div>
+  </section>
+
+  <!-- 3) النتيجة -->
+  <section id="v-result" hidden>
+    <div class="card" style="text-align:center">
+      <div class="eyebrow">YOUR ORBIT</div>
+      <h1 id="rname" style="font-size:26px"></h1>
+      <div class="ring"><svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="52" fill="none" stroke="rgba(242,231,221,.12)" stroke-width="9"/><circle id="rarc" cx="60" cy="60" r="52" fill="none" stroke="#f17233" stroke-width="9" stroke-linecap="round" stroke-dasharray="326.7" stroke-dashoffset="326.7"/></svg>
+        <div class="c"><b class="num" id="rscore">0</b><span>نقطة</span></div></div>
+      <p id="rmsg" class="lead" style="margin-top:12px"></p>
+      <div class="stats">
+        <div class="stat"><b class="num" id="rcor"></b><span>إجابات صحيحة</span></div>
+        <div class="stat"><b class="num" id="rrank"></b><span id="rranklbl">ترتيبك اليوم</span></div>
+        <div class="stat"><b class="num" id="rtime"></b><span>الزمن</span></div>
+      </div>
+    </div>
+    <div class="card" style="margin-top:14px">
+      <h2>خطوتك التالية مع منصات طويق</h2>
+      <p class="lead" style="margin-bottom:0">اخترناها لك بحسب مجالك ومستواك.</p>
+      <div id="recs"></div>
+    </div>
+    <div class="row"><button class="btn" id="again">جولة جديدة</button><button class="btn ghost" id="rboard">لوحة الصدارة</button></div>
+  </section>
+
+  <!-- 4) لوحة الصدارة -->
+  <section id="v-board" hidden>
+    <h1>لوحة الصدارة</h1>
+    <p class="lead">أفضل نتيجة لكل مشارك اليوم.</p>
+    <div class="chips" id="bfields" style="margin-bottom:14px"></div>
+    <ol class="lb" id="lb"></ol>
+    <div class="row"><button class="btn" id="bback">رجوع</button></div>
+  </section>
+</div>
+<script src="js/qrcode.js"></script>
+<script src="js/config.js"></script>
+<script src="js/common.js"></script>
+<script>
+(() => {
+const $ = id => document.getElementById(id);
+const S = { field: null, level: null, orbit: ["pos","idn","jdg","trt"].includes(qs("orbit")) ? qs("orbit") : "mix",
+            sid: null, cfg: null, lastRound: null, tick: null, answered: false, q: null, score: 0 };
+const fmtTime = ms => { const s = Math.round(ms/1000); return Math.floor(s/60) + ":" + String(s%60).padStart(2,"0"); };
+function show(v){ for (const id of ["start","quiz","result","board"]) $("v-"+id).hidden = id !== v; scrollTo(0,0); }
+
+function renderStart(){
+  const o = ORBITS[S.orbit];
+  $("orbitname").textContent = S.orbit === "mix" ? "كل المدارات" : "مدار " + o.ar;
+  $("orbitq").textContent = S.orbit === "mix" ? "اختر مجالك ومستواك، والأسئلة تُسحب لك أنت وحدك." : o.q;
+  $("fields").innerHTML = Object.entries(FIELDS).map(([k,f]) =>
+    `<button type="button" class="opt-card" data-f="${k}" aria-pressed="${S.field===k}"><b>${esc(f.ar)}</b></button>`).join("");
+  const cnt = {1:S.cfg.counts.l1,2:S.cfg.counts.l2,3:S.cfg.counts.l3};
+  $("levels").innerHTML = Object.entries(LEVELS).map(([k,l]) =>
+    `<button type="button" class="opt-card" data-l="${k}" aria-pressed="${S.level==k}"><b>${l.ar}</b><span>${cnt[k]} سؤالًا</span></button>`).join("");
+  $("orbits").innerHTML = ["mix","pos","idn","jdg","trt"].map(k =>
+    `<button type="button" class="chip" data-o="${k}" aria-pressed="${S.orbit===k}">${k==="mix"?"الكل":ORBITS[k].ar}</button>`).join("");
+}
+document.addEventListener("click", e => {
+  const b = e.target.closest("button"); if (!b) return;
+  if (b.dataset.f) { S.field = b.dataset.f; renderStart(); }
+  else if (b.dataset.l) { S.level = +b.dataset.l; renderStart(); }
+  else if (b.dataset.o) { S.orbit = b.dataset.o; renderStart(); }
+});
+
+async function start(){
+  const name = $("name").value.trim().replace(/\s+/g," ");
+  $("serr").textContent = "";
+  if (name.length < 2) return $("serr").textContent = "اكتب اسمك (حرفان على الأقل).";
+  if (!S.field) return $("serr").textContent = "اختر المجال.";
+  if (!S.level) return $("serr").textContent = "اختر المستوى.";
+  store("madar_name", name);
+  $("go").disabled = true;
+  try {
+    const r = await api("/sessions", { method:"POST", body:{ name, field:S.field, level:S.level, orbit:S.orbit } });
+    S.sid = r.sessionId; S.score = 0; $("qscore").textContent = "0 نقطة";
+    show("quiz"); showQ(r.question);
+  } catch(e) {
+    $("serr").textContent = e.status === 429 ? "الضغط عالٍ الآن، حاول بعد لحظات." : "تعذّر البدء. تأكد من الاتصال وحاول مرة أخرى.";
+  } finally { $("go").disabled = false; }
+}
+
+function showQ(q){
+  S.q = q; S.answered = false;
+  $("qn").textContent = `السؤال ${q.index} من ${q.total}`;
+  $("pbar").style.width = ((q.index-1)/q.total*100) + "%";
+  $("qorb").textContent = "مدار " + ORBITS[q.orbit].ar;
+  $("qlv").innerHTML = [1,2,3].map(i => `<i class="${i<=q.lv?"on":""}"></i>`).join("");
+  $("qtext").textContent = q.q;
+  $("opts").innerHTML = "";
+  q.o.forEach((t,i) => {
+    const b = document.createElement("button");
+    b.type = "button"; b.className = "opt"; b.dataset.i = i;
+    b.innerHTML = `<span class="k">${"أبجد"[i]}</span><span></span>`;
+    b.lastChild.textContent = t;
+    b.onclick = () => submit(i);
+    $("opts").appendChild(b);
+  });
+  $("fb").innerHTML = ""; $("next").hidden = true;
+  startTimer(q.limitMs);
+}
+
+function startTimer(limit){
+  clearInterval(S.tick);
+  const t0 = performance.now(), bar = $("tbar");
+  bar.style.width = "100%";
+  S.tick = setInterval(() => {
+    const left = Math.max(0, 1 - (performance.now()-t0)/limit);
+    bar.style.width = (left*100) + "%";
+    if (left <= 0) { clearInterval(S.tick); if (!S.answered) submit(-1); }
+  }, 100);
+}
+
+async function submit(choice){
+  if (S.answered) return; S.answered = true; clearInterval(S.tick);
+  document.querySelectorAll(".opt").forEach(b => b.disabled = true);
+  let r;
+  try { r = await api(`/sessions/${S.sid}/answer`, { method:"POST", body:{ index:S.q.index, choice } }); }
+  catch(e) {
+    $("fb").innerHTML = `<div class="fb bad"><b>انقطع الاتصال</b>الجلسة لم تعد متاحة. ابدأ جولة جديدة.</div>`;
+    $("next").hidden = false; $("next").textContent = "جولة جديدة"; $("next").onclick = () => show("start"); return;
+  }
+  const btns = [...document.querySelectorAll(".opt")];
+  btns[r.correctChoice]?.classList.add("ok");
+  if (!r.correct && choice >= 0) btns[choice].classList.add("no");
+  S.score = r.score; $("qscore").textContent = r.score + " نقطة";
+  const head = r.correct ? `إجابة صحيحة · +${r.points} نقطة` : (choice < 0 ? "انتهى الوقت" : "ليست هذه");
+  $("fb").innerHTML = `<div class="fb ${r.correct?"good":"bad"}"><b>${head}</b><span></span><small></small></div>`;
+  $("fb").querySelector("span").textContent = r.explanation;
+  const sm = $("fb").querySelector("small"); sm.append("المصدر: محتوى مدار · ");
+  const bd = document.createElement("bdi"); bd.dir = "ltr"; bd.textContent = r.src.replace(/\s*[?؟]+\s*$/, ""); sm.append(bd);
+  $("pbar").style.width = (S.q.index/S.q.total*100) + "%";
+  const n = $("next"); n.hidden = false;
+  if (r.final) { n.textContent = "عرض النتيجة"; n.onclick = () => showResult(r.final); }
+  else { n.textContent = "التالي"; n.onclick = () => showQ(r.next); }
+  n.focus({preventScroll:false});
+}
+
+function showResult(f){
+  S.lastRound = f.roundId; show("result");
+  const pct = f.total ? f.correct / f.total : 0;
+  $("rname").textContent = f.name;
+  $("rscore").textContent = f.score;
+  $("rcor").textContent = `${f.correct} من ${f.total}`;
+  $("rrank").textContent = `${f.rank} من ${f.participants}`;
+  $("rtime").textContent = fmtTime(f.ms);
+  $("rmsg").textContent = pct >= .85 ? "أداء ممتاز! أنت تقود هذا المدار." : pct >= .6 ? "جميل! تعرف الكثير، وأمامك تفاصيل تستحق المراجعة." : "بداية طيبة. محطات المدار وسطر ستقرّبك أكثر.";
+  requestAnimationFrame(() => $("rarc").style.strokeDashoffset = 326.7 * (1 - pct));
+  const rows = [["سطر", f.satr], ["مكتبة طويق", f.library], ["تحديات طويق", f.challenge]];
+  $("recs").innerHTML = rows.filter(([,r]) => r && r.url).map(([p,r]) =>
+    `<a class="rec" href="${esc(r.url)}" target="_blank" rel="noopener"><small>${p}</small><b>${esc(r.title)}</b><span>${esc(r.why)}</span></a>`).join("");
+}
+
+async function showBoard(field){
+  show("board");
+  $("bfields").innerHTML = [["", "الكل"], ["ai", FIELDS.ai.short], ["cyber", FIELDS.cyber.short]].map(([k,t]) =>
+    `<button class="chip" data-bf="${k}" aria-pressed="${(field||"")===k}">${esc(t)}</button>`).join("");
+  $("bfields").onclick = e => { const b = e.target.closest("[data-bf]"); if (b) showBoard(b.dataset.bf); };
+  try {
+    const rows = await api(`/leaderboard?limit=15${field?`&field=${field}`:""}${S.orbit!=="mix"?`&orbit=${S.orbit}`:""}`);
+    $("lb").innerHTML = rows.length ? rows.map(r =>
+      `<li><span class="rk num">${r.rank}</span><span class="nm">${esc(r.name)}<small>${esc(FIELDS[r.field].short)} · ${esc(LEVELS[r.level].ar)}</small></span><span class="sc num">${r.score}</span></li>`).join("")
+      : `<li style="grid-template-columns:1fr;text-align:center;color:var(--muted)">كن أول من يسجّل نتيجة اليوم.</li>`;
+  } catch { $("lb").innerHTML = `<li style="grid-template-columns:1fr;color:var(--bad)">تعذّر تحميل اللوحة.</li>`; }
+}
+
+$("go").onclick = start;
+$("name").addEventListener("keydown", e => { if (e.key === "Enter") start(); });
+$("seeboard").onclick = () => showBoard("");
+$("rboard").onclick = () => showBoard("");
+$("bback").onclick = () => show(S.lastRound ? "result" : "start");
+$("again").onclick = () => { S.lastRound = null; show("start"); renderStart(); };
+
+(async () => {
+  try { S.cfg = await api("/config"); } catch { S.cfg = { platform:"none", counts:{l1:12,l2:15,l3:15} }; }
+  applyPlatform(S.cfg.platform);
+  $("name").value = store("madar_name") || "";
+  renderStart(); show("start");
+})();
+})();
+</script>
+</body>
+</html>

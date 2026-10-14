@@ -1,0 +1,21 @@
+{
+  "satr-ai": [
+    { "title": "Python 101 · بوابتك إلى الذكاء الاصطناعي", "url": "https://satr.tuwaiq.edu.sa/course/rRUQyVDkwQ/view", "why": "ابدأ من لغة البرمجة التي يُبنى بها الذكاء الاصطناعي." },
+    { "title": "تمثيل البيانات: مكتبة Matplotlib", "url": "https://satr.tuwaiq.edu.sa/course/dqJmdFJufc/view", "why": "حوّل البيانات إلى رسوم تحكي قصتها." },
+    { "title": "مسار علم البيانات والذكاء الاصطناعي · 15 دورة", "url": "https://satr.tuwaiq.edu.sa/path/zaNuCyeqGx/view", "why": "المسار الكامل من الأساسيات إلى بناء النماذج." }
+  ],
+  "satr-cyber": [
+    { "title": "الحماية الرقمية والتصدي للمخاطر الإلكترونية", "url": "https://satr.tuwaiq.edu.sa/course/QQMEfb9ADu/view", "why": "عادات تحميك أنت وأسرتك من الاحتيال." },
+    { "title": "مقدمة في الأمن السيبراني", "url": "https://satr.tuwaiq.edu.sa/course/QfybsgXiVq/view", "why": "افهم التهديدات وكيف يُدافَع عنها." },
+    { "title": "مقدمة في Kali Linux", "url": "https://satr.tuwaiq.edu.sa/course/qwjMSSUCdr/view", "why": "أدوات الفحص الأمني لمن يريد التعمق." }
+  ],
+  "library-pos": [
+    { "title": "تطوير البرامج بالذكاء الاصطناعي عبر أداة Lovable", "url": "https://library.tuwaiq.edu.sa/article/910744f5-d08f-43ee-9713-3ff9d689e899", "why": "اقرأ كيف يُبنى برنامج بالذكاء الاصطناعي خطوة بخطوة." }
+  ],
+  "library-default": [
+    { "title": "تصفّح إصدارات مكتبة طويق", "url": "https://library.tuwaiq.edu.sa/publications", "why": "قراءات عربية في التقنية والبيانات والأمن." }
+  ],
+  "challenge": [
+    { "title": "جرّب تحديات طويق", "url": "https://challenges.tuwaiq.edu.sa/", "why": "اختبر مهاراتك في تحديات عملية." }
+  ]
+}
