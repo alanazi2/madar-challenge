@@ -1,5 +1,6 @@
 using System.Collections.Concurrent;
 using System.Security.Cryptography;
+using System.Text;
 
 namespace MadarChallenge;
 
@@ -16,7 +17,7 @@ public sealed class SessionService
     sealed class Session
     {
         public string Id = "";
-        public string Name = "", Field = "", Orbit = "";
+        public string Name = "", Phone = "", Field = "", Orbit = "", Lang = "ar";
         public int Level;
         public List<(Question q, int[] perm)> Items = new();
         public int Index;
@@ -46,10 +47,32 @@ public sealed class SessionService
         return s.Length is < 2 or > 24 ? null : s;
     }
 
-    public (string id, QuestionView first)? Start(string? name, string? field, int level, string? orbit)
+    /// <summary>يوحّد صيغة الجوال: يقبل أرقامًا عربية وهندية، و05xxxxxxxx و5xxxxxxxx و+9665xxxxxxxx و009665xxxxxxxx، ويرجع 05xxxxxxxx. الأرقام الدولية الأخرى (9–15 رقمًا) تُحفظ كما هي مع +.</summary>
+    public static string? CleanPhone(string? p)
+    {
+        if (p == null) return null;
+        var d = new StringBuilder();
+        foreach (var c in p)
+        {
+            if (c is >= '0' and <= '9') d.Append(c);
+            else if (c is >= '\u0660' and <= '\u0669') d.Append((char)('0' + (c - '\u0660')));
+            else if (c is >= '\u06F0' and <= '\u06F9') d.Append((char)('0' + (c - '\u06F0')));
+        }
+        var s = d.ToString();
+        if (s.StartsWith("00")) s = s[2..];
+        if (s.StartsWith("966") && s.Length == 12 && s[3] == '5') return "0" + s[3..];
+        if (s.Length == 10 && s.StartsWith("05")) return s;
+        if (s.Length == 9 && s[0] == '5') return "0" + s;
+        if (p.TrimStart().StartsWith('+') || p.TrimStart().StartsWith("00"))
+            return s.Length is >= 9 and <= 15 ? "+" + s : null;
+        return null;
+    }
+
+    public (string id, QuestionView first)? Start(string? name, string? phone, string? field, int level, string? orbit, string? lang = null)
     {
         var clean = CleanName(name);
-        if (clean == null || !QuestionBank.Fields.Contains(field) || level is < 1 or > 3) return null;
+        var ph = CleanPhone(phone);
+        if (clean == null || ph == null || !QuestionBank.Fields.Contains(field) || level is < 1 or > 3) return null;
         orbit = string.IsNullOrEmpty(orbit) ? "mix" : orbit;
         if (orbit != "mix" && !QuestionBank.Orbits.Contains(orbit)) return null;
 
@@ -57,7 +80,7 @@ public sealed class SessionService
         // RandomNumberGenerator-based seed → كل متسابق له مجموعة وترتيب مختلفان
         var rng = new Random(BitConverter.ToInt32(RandomNumberGenerator.GetBytes(4)));
         var items = _bank.Draw(field!, orbit, level, rng);
-        var s = new Session { Id = NewId(), Name = clean, Field = field!, Orbit = orbit, Level = level, Items = items, Created = Now() };
+        var s = new Session { Id = NewId(), Lang = lang == "en" ? "en" : "ar", Name = clean, Phone = ph, Field = field!, Orbit = orbit, Level = level, Items = items, Created = Now() };
         s.SentAt = Now();
         _s[s.Id] = s;
         return (s.Id, View(s));
@@ -66,8 +89,10 @@ public sealed class SessionService
     static QuestionView View(Session s)
     {
         var (q, perm) = s.Items[s.Index];
-        return new QuestionView(s.Index + 1, s.Items.Count, q.Id, q.Orbit, q.Lv, q.Q,
-            perm.Select(i => q.O[i]).ToArray(), q.Src, LimitMs);
+        var en = s.Lang == "en" ? q.En : null;
+        var opts = en?.O ?? q.O;
+        return new QuestionView(s.Index + 1, s.Items.Count, q.Id, q.Orbit, q.Lv, en?.Q ?? q.Q,
+            perm.Select(i => opts[i]).ToArray(), q.Src, LimitMs);
     }
 
     /// <returns>null = جلسة غير موجودة؛ تُرجع النتيجة أو خطأ نصي</returns>
@@ -93,12 +118,12 @@ public sealed class SessionService
             if (s.Index < s.Items.Count)
             {
                 s.SentAt = Now();
-                return (new AnswerResult(ok, correctShown, q.X, q.Src, pts, s.Score, ms, View(s), null), null);
+                return (new AnswerResult(ok, correctShown, (s.Lang == "en" ? q.En?.X : null) ?? q.X, q.Src, pts, s.Score, ms, View(s), null), null);
             }
             s.Done = true;
             var fin = Finish(s);
             _s.TryRemove(id, out _);
-            return (new AnswerResult(ok, correctShown, q.X, q.Src, pts, s.Score, ms, null, fin), null);
+            return (new AnswerResult(ok, correctShown, (s.Lang == "en" ? q.En?.X : null) ?? q.X, q.Src, pts, s.Score, ms, null, fin), null);
         }
     }
 
@@ -107,7 +132,7 @@ public sealed class SessionService
         var r = new Round
         {
             Id = NewId(), Day = Store.Today(), Ts = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),
-            Name = s.Name, Field = s.Field, Orbit = s.Orbit, Level = s.Level,
+            Name = s.Name, Phone = s.Phone, Field = s.Field, Orbit = s.Orbit, Level = s.Level,
             Score = s.Score, Correct = s.Correct, Total = s.Items.Count, Ms = s.TotalMs, Answers = s.Log
         };
         _store.AddRound(r);

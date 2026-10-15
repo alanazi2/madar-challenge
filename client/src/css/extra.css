@@ -1,0 +1,15 @@
+/* زر تبديل اللغة + تعديلات ثنائية الاتجاه */
+.lang{border:1.5px solid var(--line-2);background:transparent;border-radius:999px;padding:4px 14px;font-weight:600;font-size:13px;color:var(--ivory);min-height:34px}
+.lang:hover{border-color:var(--cyan);color:var(--cyan)}
+.top .grp,.brand .grp{display:flex;gap:8px;align-items:center}
+html[dir=ltr] .qrc small,html[dir=ltr] .url{direction:ltr}
+.eyebrow{direction:ltr;unicode-bidi:isolate}
+.phone-in{direction:ltr;text-align:start}
+html[dir=rtl] .phone-in::placeholder{text-align:right}
+.rr{grid-template-columns:130px minmax(0,1fr) minmax(0,1fr)!important}
+.rr .u{grid-column:2 / span 2}
+@media(max-width:860px){.rr{grid-template-columns:1fr!important}.rr .u{grid-column:auto}}
+.alertbox:not(:empty){background:rgba(229,100,126,.14);border:1px solid var(--bad);border-radius:14px;padding:10px 14px;font-weight:600;font-size:16px;margin:12px 0}
+.wide .btn.danger{background:var(--bad);color:#14100d}
+.wide tr.top3 td{background:rgba(241,114,51,.09)}
+.wide tr.top3 td:first-child{border-radius:0 10px 10px 0}

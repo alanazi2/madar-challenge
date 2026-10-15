@@ -31,6 +31,17 @@ select{background:var(--surface-2);border:1.5px solid var(--line-2);border-radiu
 .qrc b{display:block;margin:10px 0 2px}.qrc small{display:block;direction:ltr;unicode-bidi:isolate;color:var(--cyan);word-break:break-all;font-size:11px}
 .rr{display:grid;grid-template-columns:130px minmax(0,1fr) minmax(0,1.3fr) minmax(0,1.2fr);gap:8px;margin-top:8px;align-items:center}
 .rr input{min-height:42px;padding:8px 12px;font-size:14px}.rr input.u{direction:ltr;text-align:left}
+.wins{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.win{background:var(--surface-2);border:1px solid var(--line);border-radius:18px;padding:14px}
+.win h3{margin:0 0 2px;font-size:16px}.win .sub{color:var(--muted);font-size:12px;margin-bottom:8px}
+.win ol{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.win li{display:grid;grid-template-columns:28px minmax(0,1fr) auto;gap:8px;align-items:center}
+.win li .rk{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--surface);font-weight:800;font-size:13px}
+.win li:first-child .rk{background:var(--orange,#f26a21);color:#07090b}
+.win li small{display:block;color:var(--muted);font-size:12px}
+.win li a.tel{direction:ltr;unicode-bidi:isolate;color:var(--cyan);text-decoration:none;font-size:13px}
+.live{color:var(--cyan);font-size:12px;border:1px solid var(--cyan);border-radius:999px;padding:0 8px;margin-inline-start:6px}
+@media print{body *{visibility:hidden}#winCard,#winCard *{visibility:visible}#winCard{position:absolute;inset:0;background:#fff;color:#000}#winCard .tools button{display:none}}
 .gate{max-width:380px;margin:12vh auto}
 .ok{color:var(--ok)}
 @media(max-width:860px){.grid2{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,1fr)}.rr{grid-template-columns:1fr}.br{grid-template-columns:90px minmax(0,1fr) 80px}}
@@ -61,6 +72,14 @@ select{background:var(--surface-2);border:1.5px solid var(--line-2);border-radiu
       <div class="kpi"><b class="num" id="k2">0</b><span>الجولات</span></div>
       <div class="kpi"><b class="num" id="k3">0%</b><span>الإجابات الصحيحة</span></div>
       <div class="kpi"><b class="num" id="k4">0</b><span>متوسط النقاط</span></div>
+    </div>
+    <div class="card" style="margin-bottom:16px" id="winCard">
+      <div class="tools" style="margin-bottom:6px"><h2 style="margin:0;flex:1">متصدّر كل يوم</h2>
+        <button class="btn ghost small" id="wcopy">نسخ الفائزين</button>
+        <button class="btn ghost small" id="wcsv">تصدير الفائزين CSV</button>
+        <button class="btn ghost small" id="wprint">طباعة</button></div>
+      <p class="lead" style="font-size:13px">أفضل 3 لكل يوم (أفضل جولة لكل مشارك) مع رقم التواصل. اليوم المفتوح يُحدَّث مباشرة، ويثبت بعد انتهائه.</p>
+      <div class="wins" id="wins"></div>
     </div>
     <div class="grid2">
       <div class="card"><h2>حسب المدار</h2><div class="bars" id="bOrbit"></div></div>
@@ -133,11 +152,20 @@ async function load(){
   renderPlat(); renderQrs();
   $("purl").value = CFG.publicUrl || "";
   const rounds = await A("/rounds" + (day ? "?day=" + day : ""));
-  $("rounds").innerHTML = rounds.slice(0, 30).map(r => `<tr style="${r.hidden?"opacity:.45":""}"><td>${esc(r.name)}<br><span class="pill">${esc(ORBITS[r.orbit]?.ar || "")} · ${esc(FIELDS[r.field].short)}</span></td><td class="n num">${r.score}</td><td><button class="btn ghost small" data-h="${r.id}" data-s="${r.hidden?0:1}">${r.hidden?"إظهار":"إخفاء"}</button></td></tr>`).join("") || `<tr><td class="muted">لا جولات بعد.</td></tr>`;
+  $("rounds").innerHTML = rounds.slice(0, 30).map(r => `<tr style="${r.hidden?"opacity:.45":""}"><td>${esc(r.name)}${r.phone?`<br><bdi dir="ltr" class="muted" style="font-size:12px">${esc(r.phone)}</bdi>`:""}<br><span class="pill">${esc(ORBITS[r.orbit]?.ar || "")} · ${esc(FIELDS[r.field].short)}</span></td><td class="n num">${r.score}</td><td><button class="btn ghost small" data-h="${r.id}" data-s="${r.hidden?0:1}">${r.hidden?"إظهار":"إخفاء"}</button></td></tr>`).join("") || `<tr><td class="muted">لا جولات بعد.</td></tr>`;
+  await loadWinners();
   const recs = await A("/recs");
   const names = { "satr-ai":"سطر · الذكاء الاصطناعي", "satr-cyber":"سطر · الأمن السيبراني", "library-pos":"مكتبة طويق · الاحتمالات", "library-default":"مكتبة طويق · عام", "challenge":"تحديات طويق" };
   $("recs").innerHTML = Object.entries(recs).map(([k, list]) => list.map((r, i) =>
     `<div class="rr" data-k="${esc(k)}" data-i="${i}"><span class="pill">${esc(names[k] || k)}${list.length>1?" · "+(i+1):""}</span><input class="t" dir="auto" data-f="title" value="${esc(r.title)}" aria-label="العنوان"><input class="t u" data-f="url" value="${esc(r.url)}" aria-label="الرابط"><input class="t" dir="auto" data-f="why" value="${esc(r.why)}" aria-label="السبب"></div>`).join("")).join("");
+}
+let WIN = [];
+async function loadWinners(){
+  WIN = await A("/winners?top=3");
+  $("wins").innerHTML = WIN.length ? WIN.map(d => `<div class="win"><h3>${esc(d.day)}${d.open ? '<span class="live">مفتوح الآن</span>' : ""}</h3>
+    <div class="sub">${d.participants} مشارك · ${d.rounds} جولة</div>
+    <ol>${d.top.map(w => `<li><span class="rk num">${w.rank}</span><span>${esc(w.name)}<small>${esc(FIELDS[w.field].short)} · ${esc(ORBITS[w.orbit]?.ar || "")} · ${w.correct}/${w.total}</small></span><span style="text-align:end"><b class="num">${w.score}</b><br>${w.phone ? `<a class="tel" href="tel:${esc(w.phone)}">${esc(w.phone)}</a>` : '<small>بدون رقم</small>'}</span></li>`).join("")}</ol></div>`).join("")
+    : `<span class="muted">لا نتائج بعد.</span>`;
 }
 function renderPlat(){
   const L = { none:"مدار (افتراضي)", challenges:"تحديات طويق", satr:"سطر", library:"مكتبة طويق" };
@@ -156,6 +184,17 @@ document.addEventListener("click", async e => {
 });
 $("login").onclick = async () => { $("gerr").textContent = ""; if (!(await login($("pin").value))) $("gerr").textContent = "الرمز غير صحيح."; };
 $("pin").addEventListener("keydown", e => { if (e.key === "Enter") $("login").click(); });
+$("wcopy").onclick = async () => {
+  const t = WIN.map(d => d.day + (d.open ? " (مفتوح)" : "") + "\n" + d.top.map(w => `${w.rank}. ${w.name} — ${w.score} نقطة — ${w.phone || "بدون رقم"}`).join("\n")).join("\n\n");
+  try { await navigator.clipboard.writeText(t); $("wcopy").textContent = "تم النسخ"; } catch { $("wcopy").textContent = "تعذّر النسخ"; }
+  setTimeout(() => $("wcopy").textContent = "نسخ الفائزين", 1800);
+};
+$("wprint").onclick = () => window.print();
+$("wcsv").onclick = async () => {
+  const r = await fetch(API + "/admin/winners.csv?top=3", { headers: H() });
+  const u = URL.createObjectURL(await r.blob()); const a = document.createElement("a");
+  a.href = u; a.download = "madar-winners.csv"; a.click(); URL.revokeObjectURL(u);
+};
 $("reload").onclick = load; $("day").onchange = load;
 $("csv").onclick = async () => {
   const r = await fetch(API + "/admin/export.csv", { headers: H() });

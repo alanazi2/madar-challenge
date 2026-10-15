@@ -1,0 +1,52 @@
+.pp .hero{padding:6px 0 4px}
+.pp .orbitline{display:inline-flex;align-items:center;gap:10px;border:1px solid var(--line-2);border-radius:999px;padding:6px 16px;font-weight:700;margin-bottom:6px}
+.pp .orbitline i{width:10px;height:10px;border-radius:50%;background:var(--orange);display:block}
+.pp .bar{height:6px;background:var(--surface-2);border-radius:99px;overflow:hidden}
+.pp .bar>div{height:100%;width:0;background:var(--cyan);border-radius:99px}
+.pp .bar.time>div{background:var(--orange);transition:none}
+.pp .qhead{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:2px 0 10px;font-weight:700}
+.pp .pts{display:inline-block;background:rgba(241,114,51,.14);color:var(--orange);border-radius:999px;padding:3px 14px;font-weight:700}
+.pp .qcard{margin-top:14px}
+.pp .qtag{display:flex;gap:8px;align-items:center;color:var(--muted);font-size:13px;font-weight:700;margin-bottom:8px}
+.pp .dots{display:inline-flex;gap:3px}
+.pp .dots i{width:14px;height:5px;border-radius:3px;background:var(--line-2);display:block}
+.pp .dots i.on{background:var(--cyan)}
+.pp .qtext{font-size:clamp(19px,4.8vw,24px);font-weight:700;line-height:1.55;margin:0}
+.pp .opts{display:grid;gap:10px;margin-top:16px}
+.pp .opt{text-align:start;border:1.5px solid var(--line-2);background:var(--surface-2);border-radius:16px;padding:14px 16px;min-height:56px;display:flex;gap:12px;align-items:center;line-height:1.5}
+.pp .opt .k{flex:none;width:30px;height:30px;border-radius:50%;border:1.5px solid var(--line-2);display:grid;place-items:center;font-weight:700;font-size:14px;color:var(--muted)}
+.pp .opt:not(:disabled):hover{border-color:var(--cyan)}
+.pp .opt.ok{border-color:var(--ok);background:rgba(127,211,154,.12)}
+.pp .opt.ok .k{background:var(--ok);color:var(--on-accent);border-color:var(--ok)}
+.pp .opt.no{border-color:var(--bad);background:rgba(229,100,126,.12)}
+.pp .opt.no .k{background:var(--bad);color:var(--on-accent);border-color:var(--bad)}
+.pp .opt:disabled{cursor:default;color:inherit}
+.pp .fb{margin-top:14px;border-radius:16px;padding:14px 16px;border:1px solid var(--line)}
+.pp .fb.good{background:rgba(127,211,154,.08);border-color:rgba(127,211,154,.35)}
+.pp .fb.bad{background:rgba(229,100,126,.08);border-color:rgba(229,100,126,.35)}
+.pp .fb b{display:block;margin-bottom:4px}
+.pp .fb small{display:block;color:var(--muted);margin-top:8px;font-size:12px}
+.pp .ring{width:176px;height:176px;margin:8px auto 0;position:relative}
+.pp .ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.pp .ring .c{position:absolute;inset:0;display:grid;place-content:center;text-align:center}
+.pp .ring .c b{font-size:44px;line-height:1;font-weight:700;color:var(--orange)}
+.pp .ring .c span{font-size:13px;color:var(--muted)}
+.pp .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:18px 0}
+.pp .stat{background:var(--surface-2);border:1px solid var(--line);border-radius:14px;padding:12px 8px;text-align:center}
+.pp .stat b{display:block;font-size:22px;font-weight:700}
+.pp .stat span{font-size:12px;color:var(--muted)}
+.pp .rec{display:block;text-decoration:none;color:inherit;border:1px solid var(--line);border-radius:16px;padding:14px 16px;background:var(--surface-2);margin-top:10px}
+.pp .rec small{display:block;font-size:12px;font-weight:700;letter-spacing:.04em;color:var(--cyan);margin-bottom:2px}
+.pp .rec b{display:block}
+.pp .rec span{color:var(--muted);font-size:14px}
+.pp .lb{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.pp .lb li{display:grid;grid-template-columns:36px minmax(0,1fr) auto;gap:12px;align-items:center;border:1px solid var(--line);border-radius:14px;padding:10px 14px;background:rgba(242,231,221,.03)}
+.pp .lb li:first-child{border-color:rgba(241,114,51,.6);background:rgba(241,114,51,.08)}
+.pp .lb .rk{font-weight:700;color:var(--muted);text-align:center}
+.pp .lb li:first-child .rk{color:var(--orange)}
+.pp .lb .nm{font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pp .lb .nm small{display:block;font-weight:400;color:var(--muted);font-size:12px}
+.pp .lb .sc{font-weight:700}
+.pp .me{outline:2px solid var(--cyan)}
+.pp .row{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.pp .row .btn{flex:1}

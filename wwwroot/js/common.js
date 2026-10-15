@@ -4,7 +4,7 @@ const ORBITS = {
   pos:{ar:"الاحتمالات",en:"POSSIBILITY",n:"01",q:"ماذا ستصنع بالذكاء الاصطناعي؟"},
   idn:{ar:"الهوية",en:"IDENTITY",n:"02",q:"مَن أنت… في عالم يستطيع نسخك؟"},
   jdg:{ar:"القرار",en:"JUDGMENT",n:"03",q:"الآلة تقترح… فمن يقرّر؟"},
-  trt:{ar:"الحقيقة",en:"TRUTH",n:"04",q:"كيف تعرف أن ما تراه حقيقي؟"},
+  trt:{ar:"الحقيقة",en:"TRUTH",n:"04",q:"صورة حقيقية أم صنعها الذكاء الاصطناعي؟"},
   mix:{ar:"مزيج من المدارات",en:"MIX",n:"",q:"أسئلة من المدارات الأربعة"}
 };
 const FIELDS = {
@@ -36,4 +36,15 @@ function pubUrl(cfg){ return (cfg && cfg.publicUrl) || (location.origin + (locat
 function qrSvg(text, cell = 6){
   const q = qrcode(0, "M"); q.addData(text); q.make();
   return q.createSvgTag({ cellSize: cell, margin: 2, scalable: true });
+}
+
+/* جوال: يحوّل الأرقام العربية إلى لاتينية ويتحقق من الصيغة (05xxxxxxxx أو دولي) */
+function normPhone(v){
+  const d = String(v||"").replace(/[\u0660-\u0669]/g, c => c.charCodeAt(0)-0x660).replace(/[\u06F0-\u06F9]/g, c => c.charCodeAt(0)-0x6F0);
+  const t = d.trim(), digits = t.replace(/\D/g,"").replace(/^00/,"");
+  if (/^966 ?5\d{8}$/.test(digits) && digits.length === 12) return "0" + digits.slice(3);
+  if (/^05\d{8}$/.test(digits)) return digits;
+  if (/^5\d{8}$/.test(digits)) return "0" + digits;
+  if (/^(\+|00)/.test(t) && digits.length >= 9 && digits.length <= 15) return "+" + digits;
+  return null;
 }
